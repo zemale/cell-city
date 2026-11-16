@@ -7,7 +7,7 @@
     animal: 'Атлас живых систем · животное как город',
     human: 'Атлас живых систем · человек как город'
   };
-  var builds = { cell: window.buildCellCity, plant: window.buildPlantCity, animal: window.buildAnimalCity };
+  var builds = { cell: window.buildCellCity, plant: window.buildPlantCity, animal: window.buildAnimalCity, human: window.buildHumanCity };
   var current = 'cell';
   var busy = false;
 
@@ -26,7 +26,7 @@
   }
 
   function apply(sys){
-    if (!builds[sys]) { showToast('🫀 Человек — следующий город, уже в работе.'); return; }
+    if (!builds[sys]) { showToast('Этот город ещё в работе.'); return; }
     if (busy) return;
     busy = true;
     current = sys;
