@@ -45,11 +45,10 @@ window.buildCellCity = function(){
 
   function tag(x, y, z, name, city){
     var p = iso(x, y, z);
-    var w = Math.max(name.length * 6.9, city.length * 5.6) + 24;
+    var w = Math.max(name.length * 6.4 + 20, 42);
     return '<g class="tag" transform="translate(' + f(p[0]) + ',' + f(p[1]) + ')">' +
-      '<rect x="' + f(-w / 2) + '" y="-30" width="' + f(w) + '" height="38" rx="10"/>' +
-      '<text class="tag-name" y="-15">' + name + '</text>' +
-      '<text class="tag-city" y="-3">' + city + '</text></g>';
+      '<rect x="' + f(-w / 2) + '" y="-24" width="' + f(w) + '" height="20" rx="8"/>' +
+      '<text class="tag-name" y="-10">' + name + '</text></g>';
   }
 
   var PAL = {
@@ -235,6 +234,9 @@ window.buildCellCity = function(){
 
   var svg = '<svg id="scene" viewBox="-355 -80 710 440" preserveAspectRatio="xMidYMid meet">' + defs + stars + clouds + ground + roads + nodes.map(function(n){ return n.s; }).join('') + '</svg>';
   document.getElementById('stage').innerHTML = svg;
+  setTimeout(function(){
+    if (window.CITY_SCENES && window.CITY_SCENES.layoutTags) window.CITY_SCENES.layoutTags();
+  }, 60);
 
   var data = window.CITY_DATA, byId = {};
   data.organs.forEach(function(o){ byId[o.id] = o; });

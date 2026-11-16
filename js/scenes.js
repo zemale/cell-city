@@ -216,5 +216,5 @@
   }
 
   window.CITY_SCENES = { wire: wire, mount: mount, svg: svgWrap, stars: stars, roads: roads,
-    iso: iso, f: f, P: P, pg: pg, bil: bil, ell: ell, line: line, box: box, shadow: shadow, tag: tag, smoke: smoke };
+    iso: iso, f: f, P: P, pg: pg, bil: bil, ell: ell, line: line, box: box, shadow: shadow, tag: tag, smoke: smoke, layoutTags: layoutTags };
 })();
