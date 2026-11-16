@@ -1,4 +1,4 @@
-(function(){
+window.buildCellCity = function(){
   'use strict';
   var TW = 28, TH = 14;
   function iso(x, y, z){ z = z || 0; return [(x - y) * TW, (x + y) * TH - z]; }
@@ -267,18 +267,20 @@
     var c = document.querySelectorAll('.chip.active');
     for (var j = 0; j < c.length; j++) c[j].classList.remove('active');
   }
-  panel.addEventListener('click', function(e){ if (e.target.classList && e.target.classList.contains('panel-close')) closePanel(); });
+  panel.onclick = function(e){ if (e.target.classList && e.target.classList.contains('panel-close')) closePanel(); };
   document.querySelectorAll('.bldg[data-id]').forEach(function(g){
     g.addEventListener('click', function(e){ e.stopPropagation(); select(g.getAttribute('data-id')); });
   });
-  document.getElementById('stage').addEventListener('click', function(e){
+  var stageEl = document.getElementById('stage');
+  stageEl.onclick = function(e){
     var t = e.target;
-    while (t && t !== this){
+    while (t && t !== stageEl){
       if (t.getAttribute && t.getAttribute('data-id')) return;
       t = t.parentNode;
     }
     closePanel();
-  });
+  };
+  chips.innerHTML = '';
   data.organs.forEach(function(o){
     var b = document.createElement('button');
     b.className = 'chip';
@@ -286,10 +288,6 @@
     b.textContent = o.cityShort;
     b.addEventListener('click', function(){ select(o.id); });
     chips.appendChild(b);
-  });
-  document.getElementById('night').addEventListener('click', function(){
-    document.body.classList.toggle('night');
-    this.classList.toggle('on', document.body.classList.contains('night'));
   });
   setTimeout(function(){ hint.classList.add('hide'); }, 9000);
 
@@ -300,10 +298,6 @@
     clearTimeout(tTimer);
     tTimer = setTimeout(function(){ toast.classList.remove('show'); }, 3400);
   }
-  document.querySelectorAll('.tab').forEach(function(t){
-    t.addEventListener('click', function(){
-      if (t.classList.contains('on')) return;
-      say('\u{1F331} Пока готов только город клетки. Растение, животное и человек \u2014 следующие в очереди.');
-    });
-  });
-})();
+};
+
+window.buildCellCity();
