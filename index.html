@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Города внутри — клетка</title>
+<meta name="description" content="Строение клетки как город: интерактивная изометрическая карта.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">🏙</div>
+      <div>
+        <h1>Города внутри</h1>
+        <p>Атлас живых систем · клетка как город</p>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="night"><span>🌙</span><span class="lbl">Ночь</span></button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Системы">
+    <button class="tab on" data-sys="cell"><span>🏙</span>Клетка</button>
+    <button class="tab" data-sys="plant"><span>🌿</span>Растение<i>скоро</i></button>
+    <button class="tab" data-sys="animal"><span>🐾</span>Животное<i>скоро</i></button>
+    <button class="tab" data-sys="human"><span>🫀</span>Человек<i>скоро</i></button>
+  </nav>
+
+  <div class="stage-wrap">
+    <div class="stage" id="stage"></div>
+    <div class="hint" id="hint">Наведи или нажми на здание — расскажу, что это 👆</div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+
+  <nav class="chips" id="chips" aria-label="Объекты города"></nav>
+<div class="toast" id="toast" role="status"></div>
+
+</div>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
