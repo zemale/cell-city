@@ -49,11 +49,65 @@
 
   function tag(x, y, z, name, city){
     var p = iso(x, y, z);
-    var w = Math.max(name.length * 6.9, city.length * 5.6) + 24;
+    var w = Math.max(name.length * 6.4 + 20, 42);
     return '<g class="tag" transform="translate(' + f(p[0]) + ',' + f(p[1]) + ')">' +
-      '<rect x="' + f(-w / 2) + '" y="-30" width="' + f(w) + '" height="38" rx="10"/>' +
-      '<text class="tag-name" y="-15">' + name + '</text>' +
-      '<text class="tag-city" y="-3">' + city + '</text></g>';
+      '<rect x="' + f(-w / 2) + '" y="-24" width="' + f(w) + '" height="20" rx="8"/>' +
+      '<text class="tag-name" y="-10">' + name + '</text></g>';
+  }
+
+  // подписи видны всегда — расталкиваем их, если налезают друг на друга
+  function layoutTags(){
+    var stage = document.getElementById('stage');
+    if (!stage) return;
+    var svg = stage.querySelector('svg');
+    if (!svg) return;
+    var vb = svg.viewBox && svg.viewBox.baseVal;
+    var box = svg.getBoundingClientRect();
+    if (!vb || !vb.width || !box.width) return;
+    var k = vb.width / box.width;
+    var tags = [].slice.call(svg.querySelectorAll('.tag'));
+    if (!tags.length) return;
+
+    tags.forEach(function(t){
+      if (t.dataset.ox == null){
+        var m = /translate\(\s*([-\d.]+)[ ,]\s*([-\d.]+)\s*\)/.exec(t.getAttribute('transform') || '');
+        t.dataset.ox = m ? m[1] : 0;
+        t.dataset.oy = m ? m[2] : 0;
+      }
+      t.setAttribute('transform', 'translate(' + t.dataset.ox + ',' + t.dataset.oy + ')');
+    });
+
+    var bounds = svg.getBoundingClientRect();
+    var placed = [];
+    tags.forEach(function(t){
+      var r = t.getBoundingClientRect();
+      var w = r.width, h = r.height;
+      var sx = r.left, sy = r.top;
+      var ox = +t.dataset.ox, oy = +t.dataset.oy;
+      var cands = [[0, 0], [0, -(h + 4)], [0, -2 * (h + 4)], [0, -3 * (h + 4)],
+        [-(w * 0.5 + 4), 0], [w * 0.5 + 4, 0], [-(w * 0.5 + 4), -(h + 4)], [w * 0.5 + 4, -(h + 4)],
+        [0, h + 4], [-(w * 0.5 + 4), h + 4], [w * 0.5 + 4, h + 4]];
+      var pick = null;
+      for (var i = 0; i < cands.length; i++){
+        var nx = sx + cands[i][0], ny = sy + cands[i][1];
+        if (ny < bounds.top + 2 || nx < bounds.left + 2 || nx + w > bounds.right - 2) continue;
+        var rect = { l: nx, t: ny, r: nx + w, b: ny + h };
+        var clash = false;
+        for (var j = 0; j < placed.length; j++){
+          var p = placed[j];
+          if (!(rect.r <= p.l + 3 || rect.l >= p.r - 3 || rect.b <= p.t + 3 || rect.t >= p.b - 3)){ clash = true; break; }
+        }
+        if (!clash){ pick = { dx: cands[i][0], dy: cands[i][1], rect: rect }; break; }
+      }
+      if (!pick){
+        var dy = -(h + 5) * (placed.length ? 1 : 0);
+        pick = { dx: 0, dy: dy, rect: { l: sx, t: sy + dy, r: sx + w, b: sy + dy + h } };
+      }
+      placed.push(pick.rect);
+      if (pick.dx || pick.dy){
+        t.setAttribute('transform', 'translate(' + f(ox + pick.dx * k) + ',' + f(oy + pick.dy * k) + ')');
+      }
+    });
   }
 
   function smoke(cx, cy, n){
@@ -131,6 +185,14 @@
   function mount(svg, organs){
     document.getElementById('stage').innerHTML = svg;
     wire(organs);
+    layoutTags();
+    if (!mount.resizeBound){
+      mount.resizeBound = true;
+      window.addEventListener('resize', function(){
+        clearTimeout(mount.timer);
+        mount.timer = setTimeout(layoutTags, 160);
+      });
+    }
   }
 
   function svgWrap(defs, body, viewBox){
