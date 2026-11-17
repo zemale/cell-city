@@ -5,9 +5,10 @@
     cell: 'Атлас живых систем · клетка как город',
     plant: 'Атлас живых систем · растение как город',
     animal: 'Атлас живых систем · животное как город',
-    human: 'Атлас живых систем · человек как город'
+    human: 'Атлас живых систем · человек как город',
+    bacteria: 'Атлас живых систем · бактерия как город'
   };
-  var builds = { cell: window.buildCellCity, plant: window.buildPlantCity, animal: window.buildAnimalCity, human: window.buildHumanCity };
+  var builds = { cell: window.buildCellCity, plant: window.buildPlantCity, animal: window.buildAnimalCity, human: window.buildHumanCity, bacteria: window.buildBacteriaCity };
   var current = 'cell';
   var busy = false;
 
