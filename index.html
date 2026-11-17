@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/extras.css">
+<link rel="stylesheet" href="css/lab.css">
 </head>
 <body>
 <div class="app">
@@ -32,6 +33,7 @@
     <button class="tab" data-sys="animal"><span>🐾</span>Животное</button>
     <button class="tab" data-sys="human"><span>🫀</span>Человек</button>
     <button class="tab" data-sys="bacteria"><span>🦠</span>Бактерия</button>
+    <button class="tab" data-sys="lab"><span>🔬</span>Лаборатория</button>
   </nav>
 
   <div class="stage-wrap">
@@ -41,6 +43,7 @@
   </div>
 
   <nav class="chips" id="chips" aria-label="Объекты города"></nav>
+<div class="lab" id="lab"></div>
 <div class="toast" id="toast" role="status"></div>
 
 </div>
@@ -58,5 +61,7 @@
 <script src="js/bacteria-scene.js"></script>
 <script src="js/boot.js"></script>
 <script src="js/extras.js"></script>
+<script src="js/lab-data.js"></script>
+<script src="js/lab.js"></script>
 </body>
 </html>

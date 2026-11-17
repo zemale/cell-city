@@ -6,7 +6,8 @@
     plant: 'Атлас живых систем · растение как город',
     animal: 'Атлас живых систем · животное как город',
     human: 'Атлас живых систем · человек как город',
-    bacteria: 'Атлас живых систем · бактерия как город'
+    bacteria: 'Атлас живых систем · бактерия как город',
+    lab: 'Атлас живых систем · лаборатория опытов'
   };
   var builds = { cell: window.buildCellCity, plant: window.buildPlantCity, animal: window.buildAnimalCity, human: window.buildHumanCity, bacteria: window.buildBacteriaCity };
   var current = 'cell';
@@ -27,13 +28,20 @@
   }
 
   function apply(sys){
-    if (!builds[sys]) { showToast('Этот город ещё в работе.'); return; }
+    if (sys !== 'lab' && !builds[sys]) { showToast('Этот город ещё в работе.'); return; }
     if (busy) return;
     busy = true;
     current = sys;
     setTab(sys);
     var p = document.querySelector('.brand p');
     if (p) p.textContent = subs[sys];
+    var app = document.querySelector('.app');
+    if (app) app.classList.toggle('lab-on', sys === 'lab');
+    if (sys === 'lab'){
+      if (typeof window.buildLab === 'function') window.buildLab();
+      busy = false;
+      return;
+    }
     document.getElementById('stage').innerHTML = '';
     builds[sys]();
     document.getElementById('stage').scrollTop = 0;
