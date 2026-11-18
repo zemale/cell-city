@@ -146,7 +146,10 @@
       '<div class="rc-head">' +
         '<div class="rc-title"><span class="rk">🌱</span><div><h2>Спасатель растений</h2>' +
           '<p>Выбери дело — внутри история, рисунок с признаками и варианты ответа.</p></div></div>' +
-        '<div class="rc-levels">' + chipsRow() + '</div>' +
+        '<div class="rc-head-tools">' +
+          '<button class="rc-photo" data-photo="1"><span>📷</span>Фото-диагноз</button>' +
+          '<div class="rc-levels">' + chipsRow() + '</div>' +
+        '</div>' +
       '</div>' +
       '<div class="rc-progress"><span>Спасено ' + solvedAll + ' из ' + all.length + '</span>' +
         '<span class="rc-bar"><i style="width:'+pct+'%"></i></span>' +
@@ -255,11 +258,17 @@
       render(); window.scrollTo(0, 0);
       return;
     }
+    if (t.closest && t.closest('[data-photo]')){
+      if (window.CC_PHOTO_OPEN) window.CC_PHOTO_OPEN();
+      return;
+    }
     if (t.closest && t.closest('[data-atlas]')){
       if (window.CC_ATLAS_OPEN) window.CC_ATLAS_OPEN();
       return;
     }
   });
+
+  window.CC_PLANT_ART = scene;
 
   window.CC_RESCUE_OPEN = function(levelId){
     var app = document.querySelector('.app');

@@ -246,3 +246,73 @@ body.night .rc-bar{ background:#26314a; }
 body.night .lab-tool{ background:#1e2739; border-color:#2f3c58; color:#a9b7d4; }
 body.night .lab-clock{ background:#1e2739; border-color:#2f3c58; color:#a9b7d4; }
 body.night .lab-free-note{ background:#1c2638; border-color:#2d3b57; color:#b7c6e2; }
+
+/* ---------- фото-диагноз ---------- */
+.photo{ display:none; padding:6px max(14px,3vw) 44px; }
+html.photo-open, body.photo-open{ height:auto; min-height:100%; overflow-y:auto; overflow-x:hidden; }
+.app.photo-on, body.photo-open .app{ display:block; height:auto; min-height:100dvh; }
+.app.photo-on .photo{ display:block; }
+.app.photo-on .rescue{ display:none; }
+.app.photo-on .stage-wrap,
+.app.photo-on .chips,
+.app.photo-on .lab{ display:none !important; }
+
+.ph-wrap{ max-width:1080px; margin:0 auto; }
+.ph-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin:6px 0 14px; }
+.ph-title{ display:flex; align-items:center; gap:12px; }
+.ph-title h2{ font-family:Unbounded,Manrope,sans-serif; font-size:22px; margin:0; color:var(--ink,#2b3350); }
+.ph-title p{ margin:2px 0 0; font-size:13px; color:var(--muted,#7a839c); }
+.ph-score{ font-size:12.5px; font-weight:700; color:#5d6a86; background:#fff; border:1px solid #e3e8f4; border-radius:11px; padding:8px 13px; }
+.ph-ask{ font-size:13.5px; color:#4d5a77; margin:0 0 10px; }
+.ph-ask b{ color:#3f7d4c; }
+.ph-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.ph-tile{
+  display:flex; flex-direction:column; gap:7px; font:inherit; cursor:pointer; text-align:center;
+  background:#fff; border:2px solid #e4eaf5; border-radius:16px; padding:8px 8px 10px;
+  box-shadow:0 8px 20px rgba(60,80,140,.06); transition:.16s;
+}
+.ph-tile:hover{ transform:translateY(-3px); border-color:#a9c6f0; box-shadow:0 14px 26px rgba(60,80,140,.12); }
+.ph-frame{
+  display:block; border-radius:11px; overflow:hidden;
+  background:linear-gradient(170deg,#f9fcf6,#edf5ec);
+}
+.ph-frame svg{ display:block; width:100%; height:auto; }
+.ph-name{ font-size:12.5px; font-weight:700; color:#4d5a77; }
+.ph-tile.found{ border-color:#5ea86b; background:linear-gradient(170deg,#ffffff,#f2fbf4); box-shadow:0 0 0 3px rgba(94,168,107,.18); }
+.ph-tile.bad{ border-color:#d98b8b; background:#fdf3f3; animation:phshake .32s ease; }
+.ph-tile.dim{ opacity:.45; filter:saturate(.7); }
+@keyframes phshake{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.ph-note{
+  margin:12px 0 0; padding:11px 14px; border-radius:12px; font-size:13px; line-height:1.55;
+  background:#fdf6ee; border:1px solid #f0e0cc; color:#7a5c3a;
+}
+.ph-dx{ margin-top:16px; background:#fff; border:1.5px solid #e6ecf7; border-radius:18px; padding:16px 17px 14px; box-shadow:0 10px 26px rgba(60,80,140,.06); }
+.ph-dx .rc-q{ margin:0 0 12px; }
+
+@media (max-width:900px){
+  .ph-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:560px){
+  .ph-title h2{ font-size:18px; }
+  .ph-grid{ gap:9px; }
+  .ph-dx{ padding:14px 13px 12px; border-radius:16px; }
+}
+body.night .ph-score{ background:#1b2335; border-color:#2b3750; color:#9fb0d0; }
+body.night .ph-tile{ background:#1b2335; border-color:#2b3750; }
+body.night .ph-frame{ background:linear-gradient(170deg,#20293c,#1a2436); }
+body.night .ph-name{ color:#c2cde5; }
+body.night .ph-tile.found{ border-color:#3f7d55; background:#182b22; }
+body.night .ph-tile.bad{ border-color:#7d4a4a; background:#2c1d22; }
+body.night .ph-dx{ background:#1b2335; border-color:#2b3750; }
+body.night .ph-note{ background:#2a2418; border-color:#4a3b28; color:#dcc7a6; }
+body.night .ph-ask{ color:#b7c6e2; }
+.rc-head-tools{ display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
+.rc-photo{
+  font:inherit; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:7px;
+  background:linear-gradient(135deg,#f3f8ff,#eaf2ff); color:#3d5b8e;
+  border:1.5px solid #cfdcf3; border-radius:14px; padding:9px 14px; transition:.18s;
+}
+.rc-photo:hover{ border-color:#9db6e8; transform:translateY(-1px); box-shadow:0 8px 18px rgba(80,110,170,.14); }
+.rc-photo span{ font-size:15px; }
+body.night .rc-photo{ background:#1e2739; border-color:#2f3c58; color:#a9b7d4; }

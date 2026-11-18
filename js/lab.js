@@ -419,6 +419,7 @@
         '<div class="lab-tools">' +
           '<button class="lab-tool" data-tool="free">✨ Свободный режим</button>' +
           '<button class="lab-tool" data-tool="clock">⏱ Ускорить время</button>' +
+          '<button class="lab-tool" data-tool="trials">🎯 Испытания</button>' +
           '<span class="lab-clock">t = 0 ч</span>' +
         '</div>' +
       '</div>' +
@@ -488,6 +489,8 @@
         var free = host.classList.toggle('free-mode');
         toolBtn.classList.toggle('on', free);
         toast(free ? 'Свободный режим: смотри и пробуй без оценки' : 'Обычный режим: условия оцениваются');
+      } else if (tl === 'trials'){
+        if (window.CC_TRIALS_OPEN) window.CC_TRIALS_OPEN();
       } else if (tl === 'clock'){
         state.clockOn = !state.clockOn;
         toolBtn.classList.toggle('on', state.clockOn);
@@ -556,6 +559,42 @@
     }
   }
   setInterval(tick, 1000);
+
+  /* ---------- API для испытаний ---------- */
+  window.CC_LAB_API = {
+    room: function(){ return state.room; },
+    setRoom: function(id){
+      if (!LAB[id]) return;
+      state.room = id; initRoom(id); build();
+    },
+    knobs: function(){
+      return knobs().map(function(k){ return { id:k.id, label:k.label, unit:k.unit, min:k.min, max:k.max, step:k.step, def:k.def }; });
+    },
+    subjects: function(){
+      return room().subjects.map(function(s){ return { id:s.id, n:s.n, i:s.i, face:s.face, ok:s.ok }; });
+    },
+    subject: function(){
+      var s = subj();
+      return { id:s.id, n:s.n, i:s.i, face:s.face, ok:s.ok };
+    },
+    setSubject: function(id){ state.subj[state.room] = id; },
+    range: function(kid){ return rangeOf(kid).slice(); },
+    value: function(kid){ return val(kid); },
+    setValue: function(kid, v){
+      state.vals[state.room][kid] = v;
+      var inp = host.querySelector('[data-knob="' + kid + '"] input');
+      if (inp) inp.value = v;
+    },
+    judge: function(){
+      var j = judge();
+      return { okN: j.okN, total: j.total, tone: j.tone,
+        lines: j.lines.map(function(l){ return { id:l.id, label:l.label, unit:l.unit, v:l.v, st:l.st, band:l.band.slice(), text:l.text }; }) };
+    },
+    scene: function(){ return sceneSvg(); },
+    colony: function(){ return colonyCount(vibe()); },
+    reset: function(){ knobs().forEach(function(k){ state.vals[state.room][k.id] = k.def; }); },
+    toast: toast
+  };
 
   window.buildLab = function(){
     if (!LAB[state.room]) state.room = LAB.order[0];
