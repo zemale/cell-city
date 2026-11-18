@@ -304,3 +304,26 @@ body.night .lab-journal-empty{color:#9c96bd;border-color:rgba(255,255,255,.16)}
   .lab-journal-list{grid-template-columns:1fr}
   .lab-btn{font-size:12px;padding:9px 8px}
 }
+
+/* ---------- «Почему так получилось?» ---------- */
+.lab-why .why-list{margin:9px 0 0;display:flex;flex-direction:column;gap:1px}
+.why-row{display:flex;gap:9px;align-items:flex-start;padding:6px 8px 6px 9px;border-radius:10px;transition:background .18s}
+.why-row:hover{background:rgba(120,100,150,.07)}
+body.night .why-row:hover{background:rgba(255,255,255,.06)}
+.why-row .why-dot{flex:0 0 auto;width:9px;height:9px;border-radius:99px;margin-top:5px;background:#5fbf8a;box-shadow:0 0 0 3px rgba(95,191,138,.18)}
+.why-row.low .why-dot{background:#6d7fd6;box-shadow:0 0 0 3px rgba(109,127,214,.18)}
+.why-row.high .why-dot{background:#dd7a4e;box-shadow:0 0 0 3px rgba(221,122,78,.18)}
+.why-txt{flex:1 1 auto;min-width:0}
+.why-txt b{display:block;font-size:12.9px;color:#3b3350;font-weight:650}
+body.night .why-txt b{color:#e7e2fb}
+.why-band{display:inline-block;margin-top:1px;font-size:11px;color:#8b84a6;letter-spacing:.01em}
+body.night .why-band{color:#9a94bd}
+.why-txt p{margin:2px 0 0;font-size:12.3px;line-height:1.45;color:#52496d}
+body.night .why-txt p{color:#c6c0e2}
+.why-hint{margin:10px 0 0;padding:8px 11px;border-radius:11px;background:rgba(255,255,255,.62);box-shadow:inset 0 0 0 1px rgba(120,100,150,.14);font-size:12.2px;line-height:1.45;color:#4a4266}
+body.night .why-hint{background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);color:#cfc9ea}
+@media (max-width:640px){
+  .why-row{padding:5px 3px}
+  .why-txt b{font-size:12.3px}
+  .why-txt p{font-size:11.8px}
+}
