@@ -3,10 +3,17 @@
 /* ---------- Спасатель ---------- */
 .rescue{ display:none; padding:6px max(14px,3vw) 44px; }
 
-/* на экране спасателя страница должна листаться целиком */
-body.rescue-open{ overflow-y:auto; overflow-x:hidden; }
+/* на экране спасателя страница листается целиком.
+   два пути: класс на html/body (новый js) и :has(.app.rescue-on) — подстраховка,
+   если браузер держит старый js из кэша */
+html.rescue-open, body.rescue-open,
+html:has(.app.rescue-on), body:has(.app.rescue-on){
+  height:auto; min-height:100%; overflow-y:auto; overflow-x:hidden;
+}
+.app.rescue-on,
 body.rescue-open .app{ display:block; height:auto; min-height:100dvh; }
-body.rescue-open .rescue{ display:block; }
+body.rescue-open .rescue,
+html:has(.app.rescue-on) .rescue{ display:block; }
 .app.rescue-on .rescue{ display:block; }
 .app.rescue-on .brand p{ white-space:normal; }
 .app.rescue-on .stage-wrap,
