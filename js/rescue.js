@@ -6,7 +6,7 @@
   if (!DATA || !host) return;
 
   var SKEY = 'cc-rescue-v1';
-  var state = { level: 'easy', i: 0, picked: null, right: 0, done: 0, solved: {} };
+  var state = { level: 'easy', i: 0, picked: null, right: 0, done: 0, solved: {}, filter: 'all', caseId: null };
 
   try {
     var saved = JSON.parse(localStorage.getItem(SKEY));
@@ -17,8 +17,11 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
   function level(){ for (var i=0;i<DATA.levels.length;i++) if (DATA.levels[i].id===state.level) return DATA.levels[i]; return DATA.levels[0]; }
-  function cases(){ return DATA.cases.filter(function(c){ return c.level === state.level; }); }
-  function caseNow(){ return cases()[state.i] || null; }
+  function filtered(){ return DATA.cases.filter(function(c){ return state.filter === 'all' || c.level === state.filter; }); }
+  function cases(){ return filtered(); }
+  function byId(id){ for (var i=0;i<DATA.cases.length;i++) if (DATA.cases[i].id===id) return DATA.cases[i]; return null; }
+  function lvById(id){ for (var i=0;i<DATA.levels.length;i++) if (DATA.levels[i].id===id) return DATA.levels[i]; return DATA.levels[0]; }
+  function caseNow(){ return state.caseId ? byId(state.caseId) : null; }
   function save(){ try { localStorage.setItem(SKEY, JSON.stringify({ solved: state.solved })); } catch(e){} }
 
   /* ---------- сцена растения ---------- */
@@ -107,26 +110,67 @@
   }
 
   /* ---------- разметка ---------- */
-  function levelsRow(){
-    return DATA.levels.map(function(l){
-      return '<button class="rc-lv'+(l.id===state.level?' on':'')+'" data-lv="'+l.id+'">'+l.ico+' '+esc(l.name)+'</button>';
+  function chipsRow(){
+    var items = [{ id:'all', ico:'🗂', name:'Все дела' }].concat(DATA.levels);
+    return items.map(function(l){
+      return '<button class="rc-lv'+(l.id===state.filter?' on':'')+'" data-filter="'+l.id+'">'+l.ico+' '+esc(l.name)+'</button>';
     }).join('');
+  }
+
+  function shortStory(s){
+    s = String(s || '');
+    if (s.length <= 104) return s;
+    s = s.slice(0, 104).replace(/[,\s]+\S*$/, '');
+    return s + '…';
+  }
+
+  function cardHTML(c){
+    var l = lvById(c.level);
+    var solved = !!state.solved[c.id];
+    return '<button class="rc-card'+(solved?' solved':'')+'" data-open="'+c.id+'">' +
+        '<span class="rc-card-top">' +
+          '<span class="rc-card-lv lv-'+c.level+'">'+l.ico+' '+esc(l.name)+'</span>' +
+          (solved ? '<span class="rc-card-mark">✅</span>' : '<span class="rc-card-mark new">новое</span>') +
+        '</span>' +
+        '<span class="rc-card-plant"><span class="ci">'+c.ico+'</span>'+esc(c.plant)+'</span>' +
+        '<span class="rc-card-tag">'+esc(c.tag)+'</span>' +
+        '<span class="rc-card-prev">'+esc(shortStory(c.story))+'</span>' +
+      '</button>';
+  }
+
+  function renderList(){
+    var all = DATA.cases, list = filtered();
+    var solvedAll = all.filter(function(x){ return state.solved[x.id]; }).length;
+    var pct = Math.round(solvedAll / all.length * 100);
+    var html = '<div class="rc-wrap">' +
+      '<div class="rc-head">' +
+        '<div class="rc-title"><span class="rk">🌱</span><div><h2>Спасатель растений</h2>' +
+          '<p>Выбери дело — внутри история, рисунок с признаками и варианты ответа.</p></div></div>' +
+        '<div class="rc-levels">' + chipsRow() + '</div>' +
+      '</div>' +
+      '<div class="rc-progress"><span>Спасено ' + solvedAll + ' из ' + all.length + '</span>' +
+        '<span class="rc-bar"><i style="width:'+pct+'%"></i></span>' +
+        '<span class="rc-score">✅ ' + solvedAll + '</span></div>' +
+      '<div class="rc-cards">' + list.map(cardHTML).join('') + '</div>' +
+      '</div>';
+    host.innerHTML = html;
   }
 
   function render(){
     var c = caseNow();
-    if (!c) { renderDone(); return; }
-    var total = cases().length;
-    var solvedN = cases().filter(function(x){ return state.solved[x.id]; }).length;
-    var pct = Math.round(solvedN / total * 100);
+    if (!c){ renderList(); return; }
+    var l = lvById(c.level), list = filtered(), pos = -1;
+    for (var i=0;i<list.length;i++) if (list[i].id === c.id) pos = i;
 
     var html = '<div class="rc-wrap">' +
       '<div class="rc-head">' +
-        '<div class="rc-title"><span class="rk">🌱</span><div><h2>Спасатель растений</h2><p>' + esc(level().hint) + '</p></div></div>' +
-        '<div class="rc-levels">' + levelsRow() + '</div>' +
+        '<div class="rc-title">' +
+          '<button class="rc-back" data-back="1" aria-label="К списку дел">←</button>' +
+          '<div><h2>' + c.ico + ' ' + esc(c.plant) + '</h2>' +
+            '<p>' + l.ico + ' ' + esc(l.name) + ' · ' + esc(c.tag) + '</p></div>' +
+        '</div>' +
+        '<div class="rc-pos">' + (pos >= 0 && list.length > 1 ? ('Дело ' + (pos+1) + ' из ' + list.length) : '') + '</div>' +
       '</div>' +
-      '<div class="rc-progress"><span>Дело ' + (state.i+1) + ' из ' + total + '</span><span class="rc-bar"><i style="width:'+pct+'%"></i></span>' +
-        '<span class="rc-score">✅ ' + solvedN + '</span></div>' +
       '<div class="rc-body">' +
         '<div class="rc-left">' +
           '<div class="rc-stage">' + scene(c.art || {}) + '</div>' +
@@ -160,33 +204,38 @@
       html += '<div class="rc-line good"><b>А правильный ответ</b>' + esc(right.t) + ' — ' + esc(right.why) + '</div>';
     }
     html += '<div class="rc-lesson"><b>Что происходит на самом деле.</b> ' + esc(c.lesson) + '</div>';
-    var last = state.i >= cases().length - 1;
-    html += '<button class="rc-next" data-next="1">' + (last ? 'Итоги уровня →' : 'Следующее дело →') + '</button>';
+    var list = filtered(), pos = -1;
+    for (var i=0;i<list.length;i++) if (list[i].id === c.id) pos = i;
+    var hasNext = pos >= 0 && pos < list.length - 1;
+    html += '<div class="rc-nav">';
+    if (hasNext) html += '<button class="rc-next" data-next="1">Дальше: ' + esc(list[pos+1].plant) + ' →</button>';
+    html += '<button class="rc-next ghost" data-back="1">↩ К списку дел</button>';
+    html += '</div>';
     html += '</div>';
     return html;
   }
 
-  function renderDone(){
-    var solvedN = cases().filter(function(x){ return state.solved[x.id]; }).length;
-    var total = cases().length;
-    var msg = solvedN === total ? 'Все дела уровня закрыты. Можно браться за следующий.' :
-      'Ты спасла ' + solvedN + ' из ' + total + '. Можно пройти уровень заново и добрать остальные.';
-    host.innerHTML = '<div class="rc-wrap"><div class="rc-head">' +
-      '<div class="rc-title"><span class="rk">🌱</span><div><h2>Спасатель растений</h2><p>' + esc(level().hint) + '</p></div></div>' +
-      '<div class="rc-levels">' + levelsRow() + '</div></div>' +
-      '<div class="rc-done"><div class="big">' + (solvedN===total?'🏆':'🌿') + '</div>' +
-      '<h3>' + (solvedN===total?'Уровень пройден':'Уровень пройден на ' + solvedN + '/' + total) + '</h3>' +
-      '<p>' + esc(msg) + '</p>' +
-      '<div class="row"><button class="rc-next" data-again="1">↺ Пройти заново</button>' +
-      '<button class="rc-next" data-atlas="1" style="background:linear-gradient(135deg,#7f9cf5,#5b7de0)">🗺 В атлас</button></div></div></div>';
-  }
-
   host.addEventListener('click', function(e){
     var t = e.target;
-    var lv = t.closest ? t.closest('[data-lv]') : null;
-    if (lv){ state.level = lv.getAttribute('data-lv'); state.i = 0; state.picked = null; render(); return; }
+    var fl = t.closest ? t.closest('[data-filter]') : null;
+    if (fl){
+      state.filter = fl.getAttribute('data-filter');
+      state.caseId = null; state.picked = null;
+      render(); return;
+    }
+    var op = t.closest ? t.closest('[data-open]') : null;
+    if (op){
+      var pick = byId(op.getAttribute('data-open'));
+      if (pick){
+        state.caseId = pick.id; state.level = pick.level; state.picked = null; state.i = 0;
+        render(); window.scrollTo(0, 0);
+      }
+      return;
+    }
+    var bk = t.closest ? t.closest('[data-back]') : null;
+    if (bk){ state.caseId = null; state.picked = null; render(); window.scrollTo(0, 0); return; }
     var opt = t.closest ? t.closest('[data-opt]') : null;
-    if (opt && state.picked === null){
+    if (opt && state.picked === null && state.caseId){
       var idx = parseInt(opt.getAttribute('data-opt'), 10);
       var c = caseNow();
       state.picked = idx;
@@ -195,13 +244,16 @@
       return;
     }
     var nx = t.closest ? t.closest('[data-next]') : null;
-    if (nx){
-      if (state.i < cases().length - 1){ state.i++; state.picked = null; render(); }
-      else { state.picked = null; state.done = 1; renderDone(); }
+    if (nx && state.caseId){
+      var list = filtered(), cur = caseNow(), p = -1;
+      for (var j=0;j<list.length;j++) if (cur && list[j].id === cur.id) p = j;
+      if (p >= 0 && p < list.length - 1){
+        state.caseId = list[p+1].id; state.level = list[p+1].level; state.picked = null;
+      } else {
+        state.caseId = null; state.picked = null;
+      }
+      render(); window.scrollTo(0, 0);
       return;
-    }
-    if (t.closest && t.closest('[data-again]')){
-      state.i = 0; state.picked = null; render(); return;
     }
     if (t.closest && t.closest('[data-atlas]')){
       if (window.CC_ATLAS_OPEN) window.CC_ATLAS_OPEN();
@@ -213,8 +265,8 @@
     var app = document.querySelector('.app');
     if (app) app.classList.add('rescue-on');
     document.body.classList.add('rescue-open');
-    if (levelId) state.level = levelId;
-    state.i = 0; state.picked = null;
+    if (levelId) state.filter = levelId;
+    state.caseId = null; state.picked = null; state.i = 0;
     render();
     window.scrollTo(0, 0);
   };
