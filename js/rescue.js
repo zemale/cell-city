@@ -212,12 +212,16 @@
   window.CC_RESCUE_OPEN = function(levelId){
     var app = document.querySelector('.app');
     if (app) app.classList.add('rescue-on');
+    document.body.classList.add('rescue-open');
     if (levelId) state.level = levelId;
     state.i = 0; state.picked = null;
     render();
+    window.scrollTo(0, 0);
   };
   window.CC_RESCUE_CLOSE = function(){
     var app = document.querySelector('.app');
     if (app) app.classList.remove('rescue-on');
+    document.body.classList.remove('rescue-open');
+    window.scrollTo(0, 0);
   };
 })();

@@ -1,8 +1,14 @@
 /* Города внутри — спасатель растений + окуляр + лабораторные надстройки */
 
 /* ---------- Спасатель ---------- */
-.rescue{ display:none; padding-bottom:34px; }
+.rescue{ display:none; padding:6px max(14px,3vw) 44px; }
+
+/* на экране спасателя страница должна листаться целиком */
+body.rescue-open{ overflow-y:auto; overflow-x:hidden; }
+body.rescue-open .app{ display:block; height:auto; min-height:100dvh; }
+body.rescue-open .rescue{ display:block; }
 .app.rescue-on .rescue{ display:block; }
+.app.rescue-on .brand p{ white-space:normal; }
 .app.rescue-on .stage-wrap,
 .app.rescue-on .chips,
 .app.rescue-on .lab{ display:none !important; }
