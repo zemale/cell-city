@@ -7,7 +7,8 @@
     animal: 'Атлас живых систем · животное как город',
     human: 'Атлас живых систем · человек как город',
     bacteria: 'Атлас живых систем · бактерия как город',
-    lab: 'Атлас живых систем · лаборатория опытов'
+    lab: 'Атлас живых систем · лаборатория опытов',
+    rescue: 'Спасатель растений · диагноз по симптомам'
   };
   var builds = { cell: window.buildCellCity, plant: window.buildPlantCity, animal: window.buildAnimalCity, human: window.buildHumanCity, bacteria: window.buildBacteriaCity };
   var current = 'cell';
@@ -28,6 +29,16 @@
   }
 
   function apply(sys){
+    if (sys === 'rescue'){
+      if (window.CC_RESCUE_CLOSE) window.CC_RESCUE_CLOSE();
+      if (typeof window.CC_RESCUE_OPEN === 'function') window.CC_RESCUE_OPEN();
+      else showToast('Спасатель ещё загружается.');
+      setTab('rescue');
+      var pr = document.querySelector('.brand p');
+      if (pr) pr.textContent = subs.rescue;
+      return;
+    }
+    if (window.CC_RESCUE_CLOSE) window.CC_RESCUE_CLOSE();
     if (sys !== 'lab' && !builds[sys]) { showToast('Этот город ещё в работе.'); return; }
     if (busy) return;
     busy = true;

@@ -416,9 +416,15 @@
         '<div class="lab-title"><span class="lab-ico">' + rr.icon + '</span><div>' +
           '<h2>' + rr.room + '</h2><p>' + esc(rr.sub) + '</p></div></div>' +
         '<div class="lab-rooms">' + roomPills() + '</div>' +
+        '<div class="lab-tools">' +
+          '<button class="lab-tool" data-tool="free">✨ Свободный режим</button>' +
+          '<button class="lab-tool" data-tool="clock">⏱ Ускорить время</button>' +
+          '<span class="lab-clock">t = 0 ч</span>' +
+        '</div>' +
       '</div>' +
       '<div class="lab-body">' +
         '<div class="lab-left">' +
+          '<p class="lab-free-note">✨ <b>Свободный режим.</b> Правильного ответа нет: крути ползунки как хочешь и смотри, что происходит. Оценка условий спрятана — только наблюдение.</p>' +
           '<div class="lab-stage">' + sceneSvg() + '</div>' +
           '<div class="lab-result">' + whyHtml() + '</div>' +
         '</div>' +
@@ -475,6 +481,21 @@
     var t = e.target;
     var roomBtn = t.closest ? t.closest('[data-room]') : null;
     if (roomBtn){ state.room = roomBtn.getAttribute('data-room'); build(); return; }
+    var toolBtn = t.closest ? t.closest('[data-tool]') : null;
+    if (toolBtn){
+      var tl = toolBtn.getAttribute('data-tool');
+      if (tl === 'free'){
+        var free = host.classList.toggle('free-mode');
+        toolBtn.classList.toggle('on', free);
+        toast(free ? 'Свободный режим: смотри и пробуй без оценки' : 'Обычный режим: условия оцениваются');
+      } else if (tl === 'clock'){
+        state.clockOn = !state.clockOn;
+        toolBtn.classList.toggle('on', state.clockOn);
+        host.classList.toggle('clock-run', state.clockOn);
+        toast(state.clockOn ? 'Время ускорено: 1 секунда = 2 часа' : 'Время остановлено');
+      }
+      return;
+    }
     var subBtn = t.closest ? t.closest('[data-sub]') : null;
     if (subBtn){ state.subj[state.room] = subBtn.getAttribute('data-sub'); refreshSubs(); return; }
     var gearBtn = t.closest ? t.closest('[data-gear-btn]') : null;
@@ -509,8 +530,39 @@
     refreshVerdict(); refreshScene();
   });
 
+  /* ---------- свободный режим и ускоренное время ---------- */
+  state.clockOn = false; state.clockT = 0;
+  function clockText(){
+    var el = host.querySelector('.lab-clock');
+    if (el) el.textContent = 't = ' + state.clockT.toFixed(0) + ' ч';
+  }
+  function tick(){
+    if (!state.clockOn) return;
+    state.clockT += 2;
+    var kn = knobs(), tk = null;
+    for (var i = 0; i < kn.length; i++) if (kn[i].id === 'time') tk = kn[i];
+    if (tk){
+      var v = Math.min(tk.max, (state.vals[state.room].time || tk.min) + 2);
+      state.vals[state.room].time = v;
+      refreshVerdict(); refreshScene();
+    }
+    clockText();
+    if (state.clockT >= 96) {
+      state.clockOn = false;
+      host.classList.remove('clock-run');
+      var b = host.querySelector('[data-tool="clock"]');
+      if (b) b.classList.remove('on');
+      toast('Опыт выдержан: прошло 96 часов');
+    }
+  }
+  setInterval(tick, 1000);
+
   window.buildLab = function(){
     if (!LAB[state.room]) state.room = LAB.order[0];
     build();
+    if (state.clockOn) host.classList.add('clock-run');
+    var fb = host.querySelector('[data-tool="free"]');
+    if (fb && host.classList.contains('free-mode')) fb.classList.add('on');
+    clockText();
   };
 })();

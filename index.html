@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Города внутри — клетка</title>
-<meta name="description" content="Строение клетки как город: интерактивная изометрическая карта.">
+<title>Города внутри — атлас живых систем</title>
+<meta name="description" content="Атлас живых систем: клетка, растение, животное, человек и бактерия как города. Лаборатория опытов и спасатель растений.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/extras.css">
 <link rel="stylesheet" href="css/lab.css">
+<link rel="stylesheet" href="css/atlas.css">
+<link rel="stylesheet" href="css/rescue.css">
 </head>
 <body>
 <div class="app">
@@ -23,6 +25,8 @@
       </div>
     </div>
     <div class="controls">
+      <button class="btn" id="atlasBtn"><span>🗺</span><span class="lbl">Атлас</span></button>
+      <button class="btn" id="eyeBtn"><span>🔬</span><span class="lbl">Окуляр</span></button>
       <button class="btn" id="night"><span>🌙</span><span class="lbl">Ночь</span></button>
     </div>
   </header>
@@ -34,6 +38,7 @@
     <button class="tab" data-sys="human"><span>🫀</span>Человек</button>
     <button class="tab" data-sys="bacteria"><span>🦠</span>Бактерия</button>
     <button class="tab" data-sys="lab"><span>🔬</span>Лаборатория</button>
+    <button class="tab" data-sys="rescue"><span>🌱</span>Спасатель</button>
   </nav>
 
   <div class="stage-wrap">
@@ -43,9 +48,11 @@
   </div>
 
   <nav class="chips" id="chips" aria-label="Объекты города"></nav>
-<div class="lab" id="lab"></div>
-<div class="toast" id="toast" role="status"></div>
-
+  <div class="lab" id="lab"></div>
+  <div class="rescue" id="rescue"></div>
+  <div class="eye" id="eye"></div>
+  <div class="atlas" id="atlas"></div>
+  <div class="toast" id="toast" role="status"></div>
 </div>
 <script src="js/data.js"></script>
 <script src="js/plant-data.js"></script>
@@ -59,9 +66,13 @@
 <script src="js/animal-scene.js"></script>
 <script src="js/human-scene.js"></script>
 <script src="js/bacteria-scene.js"></script>
+<script src="js/rescue-data.js"></script>
 <script src="js/boot.js"></script>
 <script src="js/extras.js"></script>
 <script src="js/lab-data.js"></script>
 <script src="js/lab.js"></script>
+<script src="js/rescue.js"></script>
+<script src="js/eye.js"></script>
+<script src="js/atlas.js"></script>
 </body>
 </html>
