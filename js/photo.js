@@ -225,6 +225,7 @@
   });
 
   window.CC_PHOTO_OPEN = function(){
+    if (window.CC_ATLAS_CLOSE) window.CC_ATLAS_CLOSE();
     var app = document.querySelector('.app');
     if (app) { app.classList.add('photo-on'); app.classList.remove('rescue-on'); }
     document.body.classList.add('photo-open');
