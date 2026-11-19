@@ -397,6 +397,10 @@
     var box = host.querySelector('.lab-journal-list');
     if (box) box.innerHTML = journal();
     toast('Записал опыт в журнал 📓');
+    if (window.CC_PROFILE){
+      var pf = window.CC_PROFILE.get();
+      if (pf && pf.stats.lab < 10) window.CC_PROFILE.award('lab:' + Date.now(), 10, 'lab');
+    }
   }
   function toast(msg){
     var t = document.getElementById('toast');

@@ -268,7 +268,10 @@
     if (op && state.pick === null){
       var idx = parseInt(op.getAttribute('data-phopt'), 10);
       state.pick = idx;
-      if (rnd().options[idx].ok){ state.solved[rnd().id] = true; save(); }
+      if (rnd().options[idx].ok){
+        state.solved[rnd().id] = true; save();
+        if (window.CC_PROFILE) window.CC_PROFILE.award('ph:' + rnd().id, 15, 'photo');
+      }
       render();
       return;
     }

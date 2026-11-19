@@ -32,6 +32,7 @@
 
   function markVisited(id){
     var p = store.read(); p[curSys() + ':' + id] = 1; store.write(p); paintProgress();
+    if (window.CC_PROFILE) window.CC_PROFILE.award('visit:' + curSys() + ':' + id, 2, 'visit');
   }
 
   function extrasFor(id){

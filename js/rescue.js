@@ -242,7 +242,10 @@
       var idx = parseInt(opt.getAttribute('data-opt'), 10);
       var c = caseNow();
       state.picked = idx;
-      if (c.options[idx].ok){ state.solved[c.id] = true; save(); }
+      if (c.options[idx].ok){
+        state.solved[c.id] = true; save();
+        if (window.CC_PROFILE) window.CC_PROFILE.award('rc:' + c.id, 20, 'rescue');
+      }
       render();
       return;
     }
