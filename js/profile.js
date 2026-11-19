@@ -278,7 +278,7 @@
     if (!host) return;
     var h = '<div class="pf-scrim" data-pf="close"></div><div class="pf-modal" role="dialog" aria-modal="true" aria-label="Профиль">' +
       '<button class="pf-close" data-pf="close" aria-label="Закрыть">×</button>';
-    if (!state.setup || !state.name){
+    if (state.setup || !state.name){
       h += setupHTML();
     } else {
       h += '<div class="pf-body">' + headerCard() + petCard() + badgesCard() + unlocksCard() + statsCard() +
@@ -333,16 +333,24 @@
     if (state.theme) b.classList.add('cc-theme-' + state.theme);
   }
 
+  function markPick(el){
+    var grid = el.parentNode;
+    if (!grid) return;
+    var picks = grid.querySelectorAll('.pf-pick');
+    for (var i = 0; i < picks.length; i++) picks[i].classList.toggle('sel', picks[i] === el);
+  }
+
   function bind(){
     document.addEventListener('click', function(e){
       var t = e.target;
-      if (t && t.id === 'profileBtn'){ open(); return; }
+      var pbtn = t && t.closest ? t.closest('#profileBtn') : null;
+      if (pbtn){ open(); return; }
       var el = t && t.closest ? t.closest('[data-pf]') : null;
       if (!el) return;
       var a = el.getAttribute('data-pf');
       if (a === 'close'){ close(); return; }
-      if (a === 'avatar'){ state.avatar = parseInt(el.getAttribute('data-i'), 10); save(); render(); return; }
-      if (a === 'pet'){ state.pet = parseInt(el.getAttribute('data-i'), 10); save(); render(); return; }
+      if (a === 'avatar'){ state.avatar = parseInt(el.getAttribute('data-i'), 10); save(); markPick(el); return; }
+      if (a === 'pet'){ state.pet = parseInt(el.getAttribute('data-i'), 10); save(); markPick(el); return; }
       if (a === 'feed'){ feed(parseInt(el.getAttribute('data-i'), 10)); return; }
       if (a === 'heal'){ heal(); return; }
       if (a === 'theme'){
