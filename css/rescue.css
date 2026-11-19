@@ -277,6 +277,11 @@ html.photo-open, body.photo-open{ height:auto; min-height:100%; overflow-y:auto;
   background:linear-gradient(170deg,#f9fcf6,#edf5ec);
 }
 .ph-frame svg{ display:block; width:100%; height:auto; }
+.ph-frame img{ display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:cover; }
+.ph-credit{ margin:10px 2px 0; font-size:11.5px; line-height:1.5; color:#8b97b1; }
+.ph-credit a{ color:#6b83ad; text-decoration:none; border-bottom:1px dotted #b9c6de; }
+body.night .ph-credit{ color:#7f8dab; }
+body.night .ph-credit a{ color:#9db0d4; border-bottom-color:#3a465f; }
 .ph-name{ font-size:12.5px; font-weight:700; color:#4d5a77; }
 .ph-tile.found{ border-color:#5ea86b; background:linear-gradient(170deg,#ffffff,#f2fbf4); box-shadow:0 0 0 3px rgba(94,168,107,.18); }
 .ph-tile.bad{ border-color:#d98b8b; background:#fdf3f3; animation:phshake .32s ease; }

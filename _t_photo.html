@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Города внутри — атлас живых систем</title>
+<meta name="description" content="Атлас живых систем: клетка, растение, животное, человек и бактерия как города. Лаборатория опытов и спасатель растений.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20261118f">
+<link rel="stylesheet" href="css/extras.css?v=20261118f">
+<link rel="stylesheet" href="css/lab.css?v=20261118f">
+<link rel="stylesheet" href="css/atlas.css?v=20261118f">
+<link rel="stylesheet" href="css/rescue.css?v=20261118f">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">🏙</div>
+      <div>
+        <h1>Города внутри</h1>
+        <p>Атлас живых систем · клетка как город</p>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="btn" id="atlasBtn"><span>🗺</span><span class="lbl">Атлас</span></button>
+      <button class="btn" id="eyeBtn"><span>🔬</span><span class="lbl">Окуляр</span></button>
+      <button class="btn" id="night"><span>🌙</span><span class="lbl">Ночь</span></button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Системы">
+    <button class="tab on" data-sys="cell"><span>🏙</span>Клетка</button>
+    <button class="tab" data-sys="plant"><span>🌿</span>Растение</button>
+    <button class="tab" data-sys="animal"><span>🐾</span>Животное</button>
+    <button class="tab" data-sys="human"><span>🫀</span>Человек</button>
+    <button class="tab" data-sys="bacteria"><span>🦠</span>Бактерия</button>
+    <button class="tab" data-sys="lab"><span>🔬</span>Лаборатория</button>
+    <button class="tab" data-sys="rescue"><span>🌱</span>Спасатель</button>
+  </nav>
+
+  <div class="stage-wrap">
+    <div class="stage" id="stage"></div>
+    <div class="hint" id="hint">Наведи или нажми на здание — расскажу, что это 👆</div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+
+  <nav class="chips" id="chips" aria-label="Объекты города"></nav>
+  <div class="lab" id="lab"></div>
+  <div class="rescue" id="rescue"></div>
+  <div class="photo" id="photo"></div>
+  <div class="eye" id="eye"></div>
+  <div class="atlas" id="atlas"></div>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+<script src="js/data.js?v=20261118f"></script>
+<script src="js/plant-data.js?v=20261118f"></script>
+<script src="js/animal-data.js?v=20261118f"></script>
+<script src="js/human-data.js?v=20261118f"></script>
+<script src="js/bacteria-data.js?v=20261118f"></script>
+<script src="js/extra-data.js?v=20261118f"></script>
+<script src="js/scenes.js?v=20261118f"></script>
+<script src="js/app.js?v=20261118f"></script>
+<script src="js/plant-scene.js?v=20261118f"></script>
+<script src="js/animal-scene.js?v=20261118f"></script>
+<script src="js/human-scene.js?v=20261118f"></script>
+<script src="js/bacteria-scene.js?v=20261118f"></script>
+<script src="js/rescue-data.js?v=20261118f"></script>
+<script src="js/boot.js?v=20261118f"></script>
+<script src="js/extras.js?v=20261118f"></script>
+<script src="js/lab-data.js?v=20261118f"></script>
+<script src="js/lab.js?v=20261118f"></script>
+<script src="js/rescue.js?v=20261118f"></script>
+<script src="js/photo.js?v=20261118f"></script>
+<script src="js/eye.js?v=20261118f"></script>
+<script src="js/atlas.js?v=20261118f"></script>
+</body>
+</html>
+<script>
+setTimeout(function(){
+  try{
+    window.CC_PHOTO_OPEN();
+    var t1=document.querySelectorAll('.ph-tile').length;
+    var tiles=document.querySelectorAll('.ph-tile');
+    if(tiles[0]) tiles[0].click();
+    var opts=document.querySelectorAll('[data-phopt]').length;
+    var opt=document.querySelector('[data-phopt]');
+    if(opt) opt.click();
+    var fb=document.querySelectorAll('.rc-feedback').length;
+    var lesson=document.querySelectorAll('.rc-lesson').length;
+    document.title='R t='+t1+' o='+opts+' fb='+fb+' l='+lesson;
+  }catch(e){ document.title='ERR '+e.message; }
+},600);
+</script>
